@@ -10,10 +10,12 @@ import com.anusha.core.Stock;
 
 public interface StockDao extends MongoRepository<Stock, String> {
 	
-//	@Query("{companyCode:'?0'}")
+	@Query("{companyCode:'?0'}")
 	List<Stock> findByCompanyCode(String companyCode);
 	
 	
 	@Query("{companyCode:'?0' and 'date' : { $gte: ?1, $lte: ?2 }   }")
 	List<Stock> fetchStock(String companyCode, Date startDate, Date endDate);
+	
+	
 }

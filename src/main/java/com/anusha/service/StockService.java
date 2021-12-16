@@ -17,13 +17,13 @@ import com.anusha.dao.StockDao;
 @Service
 public class StockService {
 	
-//	@Autowired
-//	private StockDao stockDao;
+	@Autowired
+	private StockDao stockDao;
 	
 	public List<Stock> getStocksByCompanyCode(String companyCode) throws Exception{
 		List<Stock> stockList = new ArrayList<Stock>();
 		try {
-//			stockList = stockDao.findByCompanyCode(companyCode);
+			stockList = stockDao.findByCompanyCode(companyCode);
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -32,23 +32,47 @@ public class StockService {
 	
 	public void addStock(Stock stock) throws Exception{
 		stock.setStockDate(new Date());
-//		stockDao.save(stock);
+		stockDao.save(stock);
 	}
 	
-//	public StockDTO fetchStockList(String companyCode, Date startDate, Date endDate) throws Exception{
-//		List<Stock> stockPriceList = stockDao.fetchStock(companyCode, startDate, endDate);
-//		StockDTO stockPriceDTO = new StockDTO();
-//		if(!CollectionUtils.isEmpty(stockPriceList)) {
-//			DoubleSummaryStatistics stats = stockPriceList.stream()
-//	                .mapToDouble((x) -> x.getPrice())
-//	                .summaryStatistics();
-//			stockPriceDTO.setAverage(stats.getAverage());
-//			stockPriceDTO.setMin(stats.getMin());
-//			stockPriceDTO.setMax(stats.getMax());
-//		}
-//		stockPriceDTO.setStockList(stockPriceList);
-//		return stockPriceDTO;
-//	}
+	public StockDTO fetchStockList(String companyCode, Date startDate, Date endDate) throws Exception{
+		List<Stock> stockPriceList = stockDao.fetchStock(companyCode, startDate, endDate);
+		StockDTO stockPriceDTO = new StockDTO();
+		if(!CollectionUtils.isEmpty(stockPriceList)) {
+			DoubleSummaryStatistics stats = stockPriceList.stream()
+	                .mapToDouble((x) -> x.getPrice())
+	                .summaryStatistics();
+			stockPriceDTO.setAverage(stats.getAverage());
+			stockPriceDTO.setMin(stats.getMin());
+			stockPriceDTO.setMax(stats.getMax());
+		}
+		stockPriceDTO.setStockList(stockPriceList);
+		return stockPriceDTO;
+	}
+	
+	public StockDTO fetchAllStockPriceList(String companyCode) throws Exception{
+		List<Stock> stockList = new ArrayList<Stock>();
+		StockDTO stockPriceDTO = new StockDTO();
+		try {
+			stockList = stockDao.findByCompanyCode(companyCode);
+			
+			if(!CollectionUtils.isEmpty(stockList)) {
+				DoubleSummaryStatistics stats = stockList.stream()
+		                .mapToDouble((x) -> x.getPrice())
+		                .summaryStatistics();
+				stockPriceDTO.setAverage(stats.getAverage());
+				stockPriceDTO.setMin(stats.getMin());
+				stockPriceDTO.setMax(stats.getMax());
+			}
+			stockPriceDTO.setStockList(stockList);
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return stockPriceDTO;
+	}
+	
+	
 
 	
 	

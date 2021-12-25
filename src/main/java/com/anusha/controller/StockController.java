@@ -48,9 +48,10 @@ public class StockController {
 	public ResponseEntity<StockDTO> fetchStockPriceList(@PathVariable(name = "companyCode") String companyCode,@PathVariable(name = "startDate") String startDate,@PathVariable(name = "endDate") String endDate) throws Exception {
 		StockDTO stockDTO = null;
 		try {
-			stockDTO = stockService.fetchStockList(companyCode, new SimpleDateFormat("yyyy-MM-dd").parse(startDate), new SimpleDateFormat("yyyy-MM-dd").parse(endDate));
+			stockDTO = stockService.fetchStockList(companyCode, new SimpleDateFormat("yyyy-MM-dd").parse(startDate), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(endDate+" 23:59"));
 		} catch(Exception e) {
 			logger.error("Class StockPriceController: Failed to fetchStockPrice");
+			e.printStackTrace();
 		}
 		return new ResponseEntity<>(stockDTO, HttpStatus.OK);
 	}

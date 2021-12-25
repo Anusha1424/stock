@@ -36,17 +36,25 @@ public class StockService {
 	}
 	
 	public StockDTO fetchStockList(String companyCode, Date startDate, Date endDate) throws Exception{
-		List<Stock> stockPriceList = stockDao.fetchStock(companyCode, startDate, endDate);
 		StockDTO stockPriceDTO = new StockDTO();
+
+		try {
+			
+		List<Stock> stockPriceList = stockDao.fetchStock(companyCode, startDate, endDate);
+
 		if(!CollectionUtils.isEmpty(stockPriceList)) {
 			DoubleSummaryStatistics stats = stockPriceList.stream()
-	                .mapToDouble((x) -> x.getPrice())
+	                .mapToDouble((x) -> x.getPrice()!=null ? x.getPrice() : 0)
 	                .summaryStatistics();
 			stockPriceDTO.setAverage(stats.getAverage());
 			stockPriceDTO.setMin(stats.getMin());
 			stockPriceDTO.setMax(stats.getMax());
 		}
 		stockPriceDTO.setStockList(stockPriceList);
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		return stockPriceDTO;
 	}
 	
@@ -58,7 +66,7 @@ public class StockService {
 			
 			if(!CollectionUtils.isEmpty(stockList)) {
 				DoubleSummaryStatistics stats = stockList.stream()
-		                .mapToDouble((x) -> x.getPrice())
+		                .mapToDouble((x) ->  x.getPrice()!=null ? x.getPrice() : 0)
 		                .summaryStatistics();
 				stockPriceDTO.setAverage(stats.getAverage());
 				stockPriceDTO.setMin(stats.getMin());

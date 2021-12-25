@@ -14,7 +14,7 @@ public interface StockDao extends MongoRepository<Stock, String> {
 	List<Stock> findByCompanyCode(String companyCode);
 	
 	
-	@Query("{companyCode:'?0' and 'date' : { $gte: ?1, $lte: ?2 }   }")
+	@Query("{companyCode:'?0',stockDate: { $gte: ?1, $lte: ?2 }}")
 	List<Stock> fetchStock(String companyCode, Date startDate, Date endDate);
 	
 	
